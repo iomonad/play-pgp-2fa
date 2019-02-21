@@ -1,4 +1,4 @@
-@()
+@(form: Form[RegisterForm], target: Call)(implicit request: MessagesRequestHeader)
 @main("Register") {
   <div class="container">
     <div class="row">
@@ -6,33 +6,37 @@
       <div class="col-md-4 col-sm-8 col-xs-6">
         <img src="@routes.Assets.versioned("images/caffe.png")"/>
         <div class="panel panel-default">
+          @if(form.hasGlobalErrors) {
+            @form.globalErrors.map { error: FormError =>
+              <div class="alert alert-danger" role="alert">
+                Error: @error.key: @error.message
+              </div>
+            }
+          }
           <div class="panel-body">
             <div class="form-group">
-              <label>User Name </label>
               <div class="icon-holder">
-                <input type="text" class="form-control" required/>
+                @helper.inputText(form("User Name"), 'class -> "form-control", 'id -> "username", 'size -> 10)
                 <i class="fa fa-user icon" aria-hidden="true"></i>
               </div>
             </div>
             <div class="form-group">
-              <label>Password</label>
               <div class="icon-holder">
-                <input type="password" class="form-control" required/>
+                @helper.inputText(form("Password"), 'class -> "form-control", 'id -> "password", 'size -> 20)
                 <i class="fa fa-lock icon" aria-hidden="true"></i>
               </div>
               <div class="form-group">
-                <label>Retype Password</label>
                 <div class="icon-holder">
-                  <input type="password" class="form-control" required/>
+                  @helper.inputText(form("Retype Password"), 'class -> "form-control", 'id -> "password2", 'size -> 20)
                   <i class="fa fa-lock icon" aria-hidden="true"></i>
                 </div>
               </div>
             </div>
             <div class="form-group">
-              <label>Public Key</label>
               <div class="icon-holder">
-                <textarea class="form-control" rows="3" placeholder="-----BEGIN PGP PUBLIC KEY BLOCK-----" required>
-                </textarea>
+                @helper.textarea(form("Public Key"),
+                  'class -> "form-control", 'id -> "pubkey", 'rows -> 3,
+                  'placeholder -> "-----BEGIN PGP PUBLIC KEY BLOCK-----")
                 <i class="fa fa-lock icon" aria-hidden="true"></i>
               </div>
             </div>
