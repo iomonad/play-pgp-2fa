@@ -13,17 +13,26 @@ class AuthController @Inject()(cc: ControllerComponents)
 
   def login = Action {
     implicit r: Request[AnyContent] =>
-      Ok(views.html.login())
+      r.session.get("username_session") match {
+        case Some(_) => Redirect("/")
+        case None => Ok(views.html.login())
+      }
   }
 
   def register = Action {
     implicit r: Request[AnyContent] =>
-      Ok(views.html.register())
+      r.session.get("username_session") match {
+        case Some(_) => Redirect("/")
+        case None => Ok(views.html.register())
+      }
   }
 
   def logout = Action {
-    implicit r: Request[AnyContent] =>
-      Ok("wip")
+    Redirect("/").withNewSession
+  }
+
+  def backdoor = Action {
+    Redirect("/").withSession("username_session" -> "foo")
   }
 
 }

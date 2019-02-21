@@ -9,7 +9,9 @@ import play.api.mvc._
  * application's home page.
  */
 @Singleton
-class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
+class HomeController @Inject()(cc: ControllerComponents,
+                               authAction: AuthCustomAction)
+  extends AbstractController(cc) {
 
   /**
    * Create an Action to render an HTML page.
@@ -18,7 +20,10 @@ class HomeController @Inject()(cc: ControllerComponents) extends AbstractControl
    * will be called when the application receives a `GET` request with
    * a path of `/`.
    */
-  def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+  def index() = authAction { implicit request: Request[AnyContent] =>
+    request.session.get("username_session").map {
+      x =>
+        Ok(views.html.index(x))
+    }.getOrElse(Redirect(routes.AuthController.login()))
   }
 }

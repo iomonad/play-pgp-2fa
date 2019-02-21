@@ -1,4 +1,21 @@
-@()
-@main("Login") {
-  <h1>Hello</h1>
+@(username: String)
+
+@main(s"$username's session") {
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 col-sm-2 col-xs-3"></div>
+      <div class="col-md-4 col-sm-8 col-xs-6">
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <label><h2>Welcome @username</h2></label>
+            <div class="form-group">
+              <div class="panel-footer">
+                <button class="btn btn-primary btn-block"
+                onclick="location.href='/logout'">Logout</button>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
 }
