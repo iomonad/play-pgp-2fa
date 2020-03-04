@@ -1,4 +1,4 @@
-@(form: Form[LoginForm], target: Call)(implicit request: MessagesRequestHeader)
+@(form: Form[LoginForm], target: Call)(implicit request: MessagesRequestHeader, flash: Flash)
 @main("Login") {
   <div class="container">
     <div class="row">
@@ -12,7 +12,17 @@
                 Error: @error.key: @error.message
               </div>
             }
-          }
+           }
+	   @if(flash.get("error").isDefined) {
+	      <div class="alert alert-danger" role="alert">
+                Error: @flash.get("error")
+              </div>
+	      }
+	   @if(flash.get("info").isDefined) {
+	      <div class="success" role="alert">
+                Error: @flash.get("info")
+              </div>
+	   }
           <div class="panel-body user-login-form">
           @helper.form(target, 'id -> "user-login-form") {
             @helper.CSRF.formField
@@ -24,7 +34,7 @@
             </div>
             <div class="form-group">
               <div class="icon-holder">
-                @helper.inputText(form("Password"), 'class -> "form-control", 'id -> "password", 'size -> 20)
+                @helper.inputPassword(form("Password"), 'class -> "form-control", 'id -> "password", 'size -> 20)
                 <i class="fa fa-lock icon" aria-hidden="true"></i>
               </div>
             </div>
@@ -32,7 +42,7 @@
           <div class="panel-footer">
             <button class="btn btn-primary btn-block">Login </button>
           </div>
-        }
+          }
           <div class="panel-footer">
             <button class="btn btn-primary btn-block"
               onclick="location.href='/register'" >

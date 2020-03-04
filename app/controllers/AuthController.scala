@@ -16,14 +16,14 @@ class AuthController @Inject() (cc: MessagesControllerComponents) extends Messag
 
   val loginForm: Form[LoginForm] = Form(
     mapping(
-      "username" -> nonEmptyText, //.verifying(x => x.matches("[0-9a-zA-Z]*")),
+      "username" -> nonEmptyText.verifying(x => x.matches("[0-9a-zA-Z]*")),
       "password" -> nonEmptyText //.verifying(x => x.length < 20)
     )(LoginForm.apply)(LoginForm.unapply)
   )
 
   val registerForm: Form[RegisterForm] = Form(
     mapping(
-      "username" -> nonEmptyText, //.verifying(x => x.matches("[0-9a-zA-Z]*")),
+      "username" -> nonEmptyText.verifying(x => x.matches("[0-9a-zA-Z]*")),
       "password" -> nonEmptyText, //.verifying(x => x.length < 20),
       "password2" -> nonEmptyText, //.verifying(x => x.length < 20),
       "pubkey" -> nonEmptyText
@@ -52,7 +52,8 @@ class AuthController @Inject() (cc: MessagesControllerComponents) extends Messag
 
   def dologin = Action { implicit request: MessagesRequest[AnyContent] =>
     val error = { e: Form[LoginForm] =>
-      BadRequest(views.html.login(e, routes.AuthController.dologin()))
+      Redirect(routes.AuthController.login())
+        .flashing("error" -> "Invalid username/password.")
     }
 
     val success = { x: LoginForm =>
@@ -78,13 +79,16 @@ class AuthController @Inject() (cc: MessagesControllerComponents) extends Messag
   }
 
   def doregister = Action { implicit request: MessagesRequest[AnyContent] =>
-    val errorFunction = ???
+    val errorFunction = { e: Form[RegisterForm] =>
+      Redirect(routes.AuthController.login())
+        .flashing("error" -> "Invalid form")
+    }
+
     val successFunction = ???
+
     val formValidationResult: Form[RegisterForm] = registerForm.bindFromRequest
-    formValidationResult.fold(
-      errorFunction,
-      successFunction
-    )
+
+    formValidationResult.fold(errorFunction, successFunction)
   }
 
   def logout = Action {
