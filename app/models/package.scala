@@ -8,7 +8,6 @@ package object models {
   /**
     * Form injection model
     */
-  case class RegisterForm(username: String, password: String,
-                          password2: String, pubkey: String)
+  case class RegisterForm(username: String, password: String, password2: String, pubkey: String)
 
 }
