@@ -16,7 +16,7 @@ class AuthController @Inject() (cc: MessagesControllerComponents) extends Messag
 
   val loginForm: Form[LoginForm] = Form(
     mapping(
-      "username" -> nonEmptyText.verifying(x => x.matches("[0-9a-zA-Z]*")),
+      "username" -> nonEmptyText, //.verifying(x => x.matches("[0-9a-zA-Z]*")),
       "password" -> nonEmptyText //.verifying(x => x.length < 20)
     )(LoginForm.apply)(LoginForm.unapply)
   )
@@ -46,14 +46,14 @@ class AuthController @Inject() (cc: MessagesControllerComponents) extends Messag
         Redirect("/")
           .flashing("info" -> "You are already logged in.")
       case None =>
-        Ok(views.html.login(loginForm, routes.AuthController.dologin()))
+        Ok(views.html.login(loginForm, routes.AuthController.loginPost()))
     }
   }
 
-  def dologin = Action { implicit request: MessagesRequest[AnyContent] =>
-    val error = { e: Form[LoginForm] =>
+  def loginPost = Action { implicit request: MessagesRequest[AnyContent] =>
+    val error = { errorForm: Form[LoginForm] =>
       Redirect(routes.AuthController.login())
-        .flashing("error" -> "Invalid username/password.")
+        .flashing("error" -> s"Form validation/binding failed: ${errorForm.errors}")
     }
 
     val success = { x: LoginForm =>
@@ -66,6 +66,7 @@ class AuthController @Inject() (cc: MessagesControllerComponents) extends Messag
           .flashing("error" -> "Invalid username/password.")
       }
     }
+
     loginForm.bindFromRequest.fold(error, success)
   }
 
@@ -79,16 +80,18 @@ class AuthController @Inject() (cc: MessagesControllerComponents) extends Messag
   }
 
   def doregister = Action { implicit request: MessagesRequest[AnyContent] =>
-    val errorFunction = { e: Form[RegisterForm] =>
+    val errorFunction = { implicit e: Form[RegisterForm] =>
       Redirect(routes.AuthController.login())
         .flashing("error" -> "Invalid form")
     }
 
-    val successFunction = ???
+    val successFunction = { implicit form: Form[RegisterForm] =>
+      Redirect("/")
+    }
 
     val formValidationResult: Form[RegisterForm] = registerForm.bindFromRequest
 
-    formValidationResult.fold(errorFunction, successFunction)
+    formValidationResult.fold(errorFunction, ???)
   }
 
   def logout = Action {

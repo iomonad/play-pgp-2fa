@@ -11,6 +11,6 @@ GET     /assets/*file               controllers.Assets.versioned(path="/public",
 
 # AuthController
 GET     /login                      controllers.AuthController.login
-POST    /dologin                    controllers.AuthController.dologin
+POST    /login                      controllers.AuthController.loginPost
 GET     /logout                     controllers.AuthController.logout
 GET     /register                   controllers.AuthController.register

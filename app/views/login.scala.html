@@ -24,11 +24,11 @@
               </div>
 	   }
           <div class="panel-body user-login-form">
-          @helper.form(target, 'id -> "user-login-form") {
+          @helper.form(action = target, 'id -> "user-login-form") {
             @helper.CSRF.formField
             <div class="form-group">
               <div class="icon-holder">
-                @helper.inputText(form("User Name"), 'class -> "form-control", 'id -> "username", 'size -> 2)
+                @helper.inputText(form("Username"), 'class -> "form-control", 'id -> "username", 'size -> 2)
                 <i class="fa fa-user icon" aria-hidden="true"></i>
               </div>
             </div>
